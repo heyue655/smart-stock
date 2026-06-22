@@ -38,6 +38,10 @@ VWAP_ABOVE_MAX    = 1              # VWAP上方时间占比上限（0~1），高
 TOP_N             = 3              # 每日最终选股数量
 FALLBACK_RANGE    = [0, 2]         # 精筛无标的时回退区间（0-indexed，闭区间）：从候选按成交额排序后取第[start, end]只，如[2,3]=取第3~4只
 FALLBACK_POSITION_RATIO = 0.5      # 回退选股时的仓位比例（0~1），如0.5表示半仓
+FALLBACK_FILTER_ENABLE = False      # True=启用回退股量比/换手过滤；False=不启用，保留原有逻辑
+FALLBACK_VOL_RATIO_MIN = 1.2       # 回退股量比下限：低于此值放弃
+FALLBACK_TURNOVER_MAX = 20.0       # 回退股换手率上限：高于此值放弃
+FALLBACK_FILTER_AND_MODE = True   # True=量比和换手同时不达标才放弃；False=任一不达标就放弃
 DAILY_CAPITAL     = 100000.0       # 每日本金（均分给当日选中的每只股）
 SELL_TIME         = '10:45:00'     # 次日卖出时间
 STOP_LOSS_PCT      = -10.0           # 止损线（%）：次日10点前分钟线跌破此比例立即卖出
@@ -629,6 +633,29 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
                 _reasons.append('换手%.1f%%>%.0f%%' % (_row['turnover'], TURNOVER_MAX))
             _filter_reasons[_c] = ','.join(_reasons) if _reasons else ''
         
+        # 回退股量比/换手率过滤
+        if FALLBACK_FILTER_ENABLE:
+            _fb_drop_codes = []
+            for _c in filtered_df.index.tolist():
+                _row = final_table.loc[_c]
+                _vol_low = _row['vol_ratio'] < FALLBACK_VOL_RATIO_MIN
+                _turn_high = _row['turnover'] > FALLBACK_TURNOVER_MAX
+                if FALLBACK_FILTER_AND_MODE:
+                    if _vol_low and _turn_high:
+                        _fb_drop_codes.append(_c)
+                else:
+                    if _vol_low or _turn_high:
+                        _fb_drop_codes.append(_c)
+            if _fb_drop_codes:
+                _safe_codes = [c for c in filtered_df.index.tolist() if c not in _fb_drop_codes]
+                if not _safe_codes:
+                    result['skipped_reason'] = '回退后量比/换手过滤：所有标的均不达标'
+                    return result
+                filtered_df = filtered_df.loc[_safe_codes]
+                print("    [回退过滤] 放弃 %d 只(量比<%.1f或换手>%.0f%%): %s" % (
+                    len(_fb_drop_codes), FALLBACK_VOL_RATIO_MIN, FALLBACK_TURNOVER_MAX,
+                    ', '.join(_fb_drop_codes)))
+        
         if GLOBAL_RISK_WARN:
             _gr_codes = set()
             _m = target_date[5:7]
@@ -1173,6 +1200,40 @@ def run_month(backtest_str):
         (_win_days / len(traded) * 100) if traded else 0.0))
     print("合计买入: %.2f | 合计卖出: %.2f" % (_total_buy, _total_sell))
     print("本金: %.2f | 合计盈亏: %+.2f  (%+.2f%%)" % (DAILY_CAPITAL, _total_pnl, _total_pct))
+
+    # --- 按星期统计 ---
+    _weekday_names = ['周一', '周二', '周三', '周四', '周五']
+    _weekday_stats = {i: {'win': 0, 'lose': 0, 'pnl': 0.0, 'count': 0} for i in range(5)}
+    
+    for r in traded:
+        _date_str = r['date']
+        try:
+            _date_obj = datetime.strptime(_date_str, '%Y-%m-%d')
+            _weekday = _date_obj.weekday()
+            _weekday_stats[_weekday]['count'] += 1
+            _weekday_stats[_weekday]['pnl'] += r['total_pnl']
+            if r['total_pnl'] > 0:
+                _weekday_stats[_weekday]['win'] += 1
+            elif r['total_pnl'] < 0:
+                _weekday_stats[_weekday]['lose'] += 1
+        except Exception:
+            pass
+    
+    print("\n【按星期统计】")
+    print("-" * 80)
+    print("%-6s  %8s  %8s  %8s  %12s  %10s" % (
+        "星期", "交易次数", "盈利次数", "亏损次数", "盈亏金额", "胜率"))
+    print("-" * 80)
+    for _i in range(5):
+        _stat = _weekday_stats[_i]
+        _count = _stat['count']
+        _win = _stat['win']
+        _lose = _stat['lose']
+        _pnl = _stat['pnl']
+        _win_rate = (_win / _count * 100) if _count > 0 else 0.0
+        print("%-6s  %8d  %8d  %8d  %+12.2f  %9.1f%%" % (
+            _weekday_names[_i], _count, _win, _lose, _pnl, _win_rate))
+    print("-" * 80)
 
     _fb_details = [d for r in traded for d in r.get('details', []) if d.get('fallback')]
     if _fb_details:
