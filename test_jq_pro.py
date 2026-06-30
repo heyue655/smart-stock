@@ -14,10 +14,10 @@ datetime = _dt.datetime
 # ============================================================
 # 【可调参数】—— 只需修改这里
 # ============================================================
-TARGET_DATE       = '2026-06'      # 回测月份（YYYY-MM）或具体日期（YYYY-MM-DD），日期则仅回测该日
+TARGET_DATE       = '2026-03'      # 回测月份（YYYY-MM）或具体日期（YYYY-MM-DD），日期则仅回测该日
 
 SCREEN_START_TIME = '09:30:00'     # 分钟线起始时间
-SCREEN_END_TIME   = '14:50:00'     # 尾盘截止时间（选股时间点）
+SCREEN_END_TIME   = '14:57:00'     # 尾盘截止时间（选股时间点）
 
 HIST_DAYS_COUNT   = 6              # 拉取日线天数（含T日）
 SMART_RISE_LOOKBACK = 30           # 智能过滤累计涨幅回看天数（交易日），用于判断前期是否已大涨
@@ -35,40 +35,18 @@ TURNOVER_MAX      = 12             # 换手率上限（%）
 VWAP_ABOVE_MIN    = 0.8            # VWAP上方时间占比下限（0~1），低于此值过滤
 VWAP_ABOVE_MAX    = 1              # VWAP上方时间占比上限（0~1），高于此值过滤
 
-# --- 大盘跌但上涨数量>阈值时放宽精筛条件 ---
-RELAX_ON_MKT_DOWN_RISE_HIGH    = False   # True=大盘下跌且上涨数量>阈值时放宽精筛条件
-RELAX_ONLY_WHEN_NEEDED         = True   # True=仅常规条件0结果时才放宽；False=条件满足即直接放宽
-RELAX_RISE_RATIO_THRESHOLD     = 0.45    # 上涨数量占比阈值（上涨数/总股票数）
-RELAX_UPPER_SHADOW_MAX         = 3.0    # 放宽后上影线上限(%)，替换UPPER_SHADOW_MAX(原3%)
-RELAX_VOL_RATIO_MIN            = 1.5    # 放宽后量比下限，替换VOL_RATIO_MIN(原1.8)
-RELAX_VOL_RATIO_MAX            = 5.5    # 放宽后量比上限，替换VOL_RATIO_MAX(原5.5)
-RELAX_TURNOVER_MIN             = 5.0    # 放宽后换手率下限(%)，替换TURNOVER_MIN(原5%)
-RELAX_TURNOVER_MAX             = 15.0   # 放宽后换手率上限(%)，替换TURNOVER_MAX(原12%)
-RELAX_VWAP_ABOVE_MIN           = 0.8    # 放宽后VWAP上方时间占比下限，替换VWAP_ABOVE_MIN(原0.8)
-
 TOP_N             = 3              # 每日最终选股数量
 FALLBACK_RANGE    = [0, 2]         # 精筛无标的时回退区间（0-indexed，闭区间）：从候选按成交额排序后取第[start, end]只，如[2,3]=取第3~4只
-FALLBACK_POSITION_RATIO = 1.0      # 回退选股时的仓位比例（0~1），如0.5表示半仓
+FALLBACK_POSITION_RATIO = 0.5      # 回退选股时的仓位比例（0~1），如0.5表示半仓
 FALLBACK_FILTER_ENABLE = False      # True=启用回退股量比/换手过滤；False=不启用，保留原有逻辑
 FALLBACK_VOL_RATIO_MIN = 1.2       # 回退股量比下限：低于此值放弃
 FALLBACK_TURNOVER_MAX = 20.0       # 回退股换手率上限：高于此值放弃
 FALLBACK_FILTER_AND_MODE = True   # True=量比和换手同时不达标才放弃；False=任一不达标就放弃
 DAILY_CAPITAL     = 100000.0       # 每日本金（均分给当日选中的每只股）
-SELL_TIME         = '10:30:00'     # 次日卖出时间
+SELL_TIME         = '10:45:00'     # 次日卖出时间
 STOP_LOSS_PCT      = -10.0           # 止损线（%）：次日10点前分钟线跌破此比例立即卖出
 DELAY_SELL_DAYS    = 2               # 延迟卖出天数：0=T+1卖出；>0=若T+1亏损则持有，每日检查回本，第N日强制卖出
-SELL_MODE          = 'half_2pct_5pct_trail'         # 交易模式：'delay'=延迟卖出(DELAY_SELL_DAYS)；'win_hold'=T+1盈则持有到T+2卖；'loss_hold'=T+1盈卖/亏持；'half_2pct_5pct_trail'=半仓2%止盈+剩半仓peakk达阈值后激活回撤止盈；'body_break'=T+1跌破实体下沿则卖,翻正则持有T+N强卖
-
-# --- 实体跌破止盈参数（SELL_MODE='body_break' 时生效）---
-BODY_BREAK_HOLD_DAYS = 3             # 未触发跌破实体时最长持有天数，T+N日SELL_TIME强制卖出
-
-# --- 半仓+回撤止盈参数（SELL_MODE='half_2pct_5pct_trail' 时生效）---
-TRAIL_ACTIVATE_PCT = 5.0            # 激活回撤监控的峰值涨幅阈值（%）：剩余半仓的peak达到此值后启动回撤
-TRAIL_PCT          = 2.0            # 回撤止盈阈值（%）：peak - 当前价 >= 此值则卖出剩余半仓
-
-# --- 补仓参数 ---
-AVERAGING_DOWN_ENABLE = True       # True=启用补仓；False=不启用
-AVERAGING_DOWN_PCT = -5.0           # 补仓触发跌幅（%）：T+1跌到此比例时补仓
+SELL_MODE          = 'delay'         # 交易模式：'delay'=延迟卖出(DELAY_SELL_DAYS)；'win_hold'=T+1盈利则持有到T+2卖，亏损则T+1直接卖；'loss_hold'=T+1盈利直接卖，亏损持有DELAY_SELL_DAYS天，回本就卖，到期强制卖
 
 # --- 顶部风险过滤 ---
 FILTER_TOP_RISK         = False  # True=过滤有顶部风险的标的；False=跳过风险检查
@@ -122,7 +100,7 @@ VOLUME_FILTER_RISE_THRESHOLD = 12.0  # 智能过滤前期涨幅阈值(%)：仅�
 
 # --- 量价背离过滤 ---
 FILTER_VOLUME_DIVERGENCE = True   # True=近5日涨但量能萎缩则过滤；False=不过滤
-VOLUME_DIVERGENCE_DAYS = 3         # 量价背离检查天数
+VOLUME_DIVERGENCE_DAYS = 5         # 量价背离检查天数
 
 # --- 情绪比值过滤（成交额万亿 / (上涨数/总股票数)，总股票数含ST/退市）---
 SENTIMENT_RATIO_FILTER    = False   # True=按比值过滤选股；False=不过滤仅给风险提示
@@ -131,7 +109,6 @@ SENTIMENT_RATIO_LOW_MKT   = 3.8    # 总成交额 < 阈值 时要求的最低比
 SENTIMENT_RATIO_HIGH_MKT  = 2.0    # 总成交额 >= 阈值 时要求的最低比值
 
 VERBOSE_DAILY     = False          # 是否打印每日漏斗详情（True=详细, False=仅汇总）
-DEBUG_SCREEN      = False          # 打印初筛/精筛每步过滤明细和候选股指标（调试用）
 
 # --- CSV 导出 ---
 EXPORT_CSV        = False           # 是否导出 CSV（聚宽研究环境左侧文件树可下载）
@@ -195,10 +172,6 @@ def _log(msg):
     if VERBOSE_DAILY:
         print(msg)
 
-def _dbg(*args):
-    if DEBUG_SCREEN:
-        print(*args)
-
 
 def screen_one_day(target_date, sell_days, stocks_info_cache=None):
     """
@@ -253,7 +226,7 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
     # --- 日线数据（全量，含ST，便于统计真实大盘情绪）---
     try:
         df_daily = get_price(all_stock_list, count=HIST_DAYS_COUNT, end_date=target_date, frequency='daily',
-                             fields=['open', 'close', 'pre_close', 'high', 'low', 'volume', 'money'], panel=False)
+                             fields=['close', 'pre_close', 'high', 'low', 'volume', 'money'], panel=False)
     except Exception as e:
         result['skipped_reason'] = 'get_price(daily) error: %s' % str(e)
         return result
@@ -267,6 +240,7 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
     df_flat = df_flat.loc[:, ~df_flat.columns.duplicated()]
 
     all_days = sorted(df_flat['time'].unique())
+    print("    [日线] T日数据最后一天: %s | 共%d天 | 股票数: %d" % (str(all_days[-1]) if all_days else '无', len(all_days), len(all_stock_list)))
     hist_days = all_days[:-1]
     t_day = all_days[-1]
     df_hist = df_flat[df_flat['time'].isin(hist_days)]
@@ -367,10 +341,7 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
     # --- 市值 ---
     q = query(valuation.code, valuation.circulating_market_cap, valuation.circulating_cap).filter(
         valuation.code.in_(all_stock_list))
-    # 取最近一个已有基本面数据的交易日，避免当天未更新导全量NaN
-    _fund_dates = get_trade_days(end_date=target_date, count=2)
-    _fund_date = str(_fund_dates[0]) if len(_fund_dates) >= 2 else target_date
-    cap_df = get_fundamentals(q, date=_fund_date).set_index('code')
+    cap_df = get_fundamentals(q, date=target_date).set_index('code')
     pre_picks = t_day_basic.join(cap_df, how='inner')
     # 应用 ST 过滤（仅影响候选池，不影响上面已算好的大盘情绪）
     if st_excluded:
@@ -431,6 +402,7 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
         else:
             _sector_thr = SECTOR_ABSOLUTE_FLOOR
         _active_sectors = set(_sector_chg[_sector_chg > _sector_thr].index.tolist())
+        print("    [行业] 活跃行业数: %d | 阈值: %.2f%% | 总行业数: %d" % (len(_active_sectors), _sector_thr, len(_sector_chg)))
     else:
         pre_picks['sector'] = ''
 
@@ -440,19 +412,17 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
         (pre_picks['circulating_market_cap'] >= MKT_CAP_MIN) &
         (pre_picks['circulating_market_cap'] <= MKT_CAP_MAX)
     )
-    _dbg("    [初筛] 基础条件(涨幅%.0f~%.0f%% 市值%.0f~%.0f亿)通过: %d" % (PCT_CHG_MIN, PCT_CHG_MAX, MKT_CAP_MIN, MKT_CAP_MAX, mask_basic.sum()))
+    _after_basic = mask_basic.sum()
+    print("    [初筛] 基础条件(涨幅/市值)通过: %d" % _after_basic)
     if TREND_ABOVE_MA5:
         mask_basic = mask_basic & (pre_picks['close'] >= pre_picks['ma5'])
-        _dbg("    [初筛] MA5以上过滤后: %d" % mask_basic.sum())
     if TREND_PREV_RET_MIN is not None:
         mask_basic = mask_basic & (pre_picks['prev_ret_pct'] >= TREND_PREV_RET_MIN)
-        _dbg("    [初筛] 前期超跌过滤(>%.0f%%)后: %d" % (TREND_PREV_RET_MIN, mask_basic.sum()))
     if FILTER_PREV_DAY_DOWN:
         mask_basic = mask_basic & (pre_picks['prev_day_pct'] >= PREV_DAY_DOWN_THRESHOLD)
-        _dbg("    [初筛] 前日下跌过滤后: %d" % mask_basic.sum())
     if FILTER_PREV_DAY_UPPER_SHADOW:
         mask_basic = mask_basic & (pre_picks['prev_day_upper_shadow'] <= PREV_DAY_UPPER_SHADOW_MAX)
-        _dbg("    [初筛] 前日上影线过滤后: %d" % mask_basic.sum())
+    print("    [初筛] MA5/趋势/前日过滤后: %d" % mask_basic.sum())
 
     # --- 均线多头排列 + 向上趋势过滤 ---
     if FILTER_MA_TREND and _ma_data:
@@ -474,7 +444,7 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
                 _ma_mask = _ma_mask & (_cur_ma > _prev_ma)
         
         mask_basic = mask_basic & _ma_mask.fillna(False)
-        _dbg("    [初筛] 均线多头排列过滤后: %d" % mask_basic.sum())
+    print("    [初筛] 均线多头排列过滤后: %d" % mask_basic.sum())
 
     # --- 活跃行业选股（Top N 一级行业）---
     candidate_list = []
@@ -543,7 +513,7 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
             if _vol_ratio_prev is not None:
                 _vol_mask = _vol_mask & (_vol_ratio_prev < VOLUME_DOUBLE_THRESHOLD)
         mask_basic = mask_basic & _vol_mask.fillna(True)
-        _dbg("    [初筛] 成交量翻倍过滤后: %d" % mask_basic.sum())
+    print("    [初筛] 成交量翻倍过滤后: %d" % mask_basic.sum())
 
     # --- 量价背离过滤 ---
     if FILTER_VOLUME_DIVERGENCE and len(hist_days) >= VOLUME_DIVERGENCE_DAYS:
@@ -564,33 +534,22 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
             # 量价背离：涨但量缩
             _divergence_mask = ~((_recent_pct > 0) & (_recent_vol < _older_vol))
             mask_basic = mask_basic & _divergence_mask.reindex(mask_basic.index).fillna(True)
-        _dbg("    [初筛] 量价背离过滤后: %d" % mask_basic.sum())
+    print("    [初筛] 量价背离过滤后: %d" % mask_basic.sum())
 
     # --- 初筛 ---
     if SELECT_FROM_ACTIVE_SECTORS:
         # 已在上面计算好 candidate_list
         if not candidate_list:
             result['skipped_reason'] = '初筛无候选'
+            print("    [初筛] 无候选 | 活跃行业候选数: 0")
             return result
     else:
         if _active_sectors is not None:
             mask_basic = mask_basic & pre_picks['sector'].map(lambda s: s in _active_sectors)
-            _dbg("    [初筛] 活跃行业过滤后: %d (活跃行业数: %d)" % (mask_basic.sum(), len(_active_sectors) if _active_sectors else 0))
         candidate_list = pre_picks[mask_basic].index.tolist()
         if not candidate_list:
-            # 打印被过滤掉的股票及其各项指标，帮助排查
-            if mask_basic.sum() == 0 and len(pre_picks) > 0:
-                _check_cols = ['pct_chg', 'circulating_market_cap', 'close', 'ma5', 'prev_ret_pct']
-                if 'sector' in pre_picks.columns:
-                    _check_cols.append('sector')
-                _show = pre_picks[_check_cols].head(10)
-                _dbg("    [初筛] 前10只候选股指标(调试):")
-                for _ci, _cr in _show.iterrows():
-                    _dbg("      %s 涨幅%.2f%% 市值%.1f亿 close=%.2f ma5=%.2f prev_ret=%.1f%% sector=%s" % (
-                        _ci, _cr.get('pct_chg', 0), _cr.get('circulating_market_cap', 0),
-                        _cr.get('close', 0), _cr.get('ma5', 0),
-                        _cr.get('prev_ret_pct', 0), _cr.get('sector', '')))
             result['skipped_reason'] = '初筛无候选'
+            print("    [初筛] 无候选 | 过滤前pre_picks数: %d | 活跃行业数: %s" % (len(pre_picks), len(_active_sectors) if _active_sectors else 'None'))
             return result
 
     # --- 分钟线精算 ---
@@ -609,15 +568,12 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
     if 'index' in df_min_flat.columns:
         df_min_flat.drop('index', axis=1, inplace=True)
     df_min_flat = df_min_flat.loc[:, ~df_min_flat.columns.duplicated()]
-    # 截断到 SCREEN_END_TIME，避免回测环境返回全天数据
-    df_min_flat = df_min_flat[df_min_flat['time'] <= end_time]
 
     vol_intra = df_min_flat.groupby('code')['volume'].sum()
     _actual_minutes = float(len(df_min_flat['time'].drop_duplicates()))
     _screen_mins = _actual_minutes if _actual_minutes > 0 else SCREEN_MINUTES
     _last_min_time = str(df_min_flat['time'].max())
-    _first_min_time = str(df_min_flat['time'].min())
-    print("    [分钟线] 时间范围: %s ~ %s | 实际分钟数: %d | 候选股数: %d" % (_first_min_time, _last_min_time, int(_actual_minutes), len(candidate_list)))
+    print("    [分钟线] 最后一根分时线时间: %s | 实际分钟数: %d | 候选股数: %d" % (_last_min_time, int(_actual_minutes), len(candidate_list)))
     min_final = df_min_flat.groupby('code').last()
     min_final['vol_ratio'] = (vol_intra / _screen_mins) / pre_picks['avg_vol_5d']
     min_final['today_high'] = df_min_flat.groupby('code')['high'].max()
@@ -627,24 +583,6 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
     df_min_flat['cum_money'] = df_min_flat.groupby('code')['money'].cumsum()
     df_min_flat['cum_volume'] = df_min_flat.groupby('code')['volume'].cumsum()
     df_min_flat['vwap'] = df_min_flat['cum_money'] / df_min_flat['cum_volume']
-
-    intraday_money_series = df_min_flat.groupby('code')['cum_money'].last()
-
-    # 打印前3只候选股的计算值，确认数据正确
-    if DEBUG_SCREEN:
-        _sample_codes = candidate_list[:min(3, len(candidate_list))]
-        for _sc in _sample_codes:
-            _sc_data = df_min_flat[df_min_flat['code'] == _sc]
-            if len(_sc_data) > 0:
-                _sc_last = _sc_data.iloc[-1]
-                _sc_vwap = float(_sc_data['vwap'].iloc[-1]) if len(_sc_data['vwap'].dropna()) > 0 else 0
-                _sc_cum_money = float(_sc_data['cum_money'].iloc[-1])
-                _sc_high = float(min_final.loc[_sc, 'today_high']) if _sc in min_final.index else float(_sc_last['close'])
-                _sc_vol_ratio = float(min_final.loc[_sc, 'vol_ratio']) if _sc in min_final.index else 0
-                _dbg("      %s close=%.2f vwap=%.2f 上影=%.1f%% 量比=%.2f 累计成交额=%.0f万 总手=%d" % (
-                    _sc, float(_sc_last['close']), _sc_vwap,
-                    (_sc_high - float(_sc_last['close'])) / float(_sc_last['close']) * 100,
-                    _sc_vol_ratio, _sc_cum_money / 10000, int(_sc_data['volume'].sum())))
 
     _valid = df_min_flat[df_min_flat['vwap'] > 0]
     _above_cnt = _valid[_valid['close'] >= _valid['vwap']].groupby('code').size()
@@ -656,98 +594,33 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
         min_final.drop('money', axis=1, inplace=True)
 
     # 先用 VWAP 过滤缩小候选池，确保回退时也不会选到 VWAP 不达标的股票
-    # --- 大盘跌但上涨数量高时放宽精筛 ---
-    _is_mkt_down = _sh_chg < 0
-    _rise_ratio = result['sh_rise_count'] / float(total_stock_count) if total_stock_count > 0 else 0.0
-    _can_relax = RELAX_ON_MKT_DOWN_RISE_HIGH and _is_mkt_down and _rise_ratio > RELAX_RISE_RATIO_THRESHOLD
-    if RELAX_ONLY_WHEN_NEEDED:
-        _relax_try_modes = [(False, '常规')] if _can_relax else [(False, '常规')]
-        if _can_relax:
-            _relax_try_modes.append((True, '放宽'))
-    else:
-        _relax_try_modes = [(True, '放宽')] if _can_relax else [(False, '常规')]
-    _relax_used = False
-    _pre_picks_before_vwap = pre_picks.copy()
-    
-    for _try_idx, (_try_relax, _try_label) in enumerate(_relax_try_modes):
-        pre_picks = _pre_picks_before_vwap.copy()
-        if _try_relax:
-            _vwap_min_use = RELAX_VWAP_ABOVE_MIN
-            _upper_shadow_use = RELAX_UPPER_SHADOW_MAX
-            _vol_ratio_min_use = RELAX_VOL_RATIO_MIN
-            _vol_ratio_max_use = RELAX_VOL_RATIO_MAX
-            _turnover_min_use = RELAX_TURNOVER_MIN
-            _turnover_max_use = RELAX_TURNOVER_MAX
-        else:
-            _vwap_min_use = VWAP_ABOVE_MIN
-            _upper_shadow_use = UPPER_SHADOW_MAX
-            _vol_ratio_min_use = VOL_RATIO_MIN
-            _vol_ratio_max_use = VOL_RATIO_MAX
-            _turnover_min_use = TURNOVER_MIN
-            _turnover_max_use = TURNOVER_MAX
-        _vwap_pass_codes = vwap_above_ratio[(vwap_above_ratio >= _vwap_min_use) & (vwap_above_ratio <= VWAP_ABOVE_MAX)].index.tolist()
-        pre_picks = pre_picks[pre_picks.index.isin(_vwap_pass_codes)]
-        if len(pre_picks) == 0:
-            if _try_idx == len(_relax_try_modes) - 1:
-                result['skipped_reason'] = 'VWAP过滤后无候选（全部不在%.0f%%~%.0f%%区间）' % (_vwap_min_use * 100, VWAP_ABOVE_MAX * 100)
-                result['do_relax'] = _try_relax
-                return result
-            continue
-        final_table = min_final.join(
-            pre_picks[['pct_chg', 'circulating_market_cap', 'circulating_cap', 'money']], how='inner')
-        final_table['turnover'] = (vol_intra / (final_table['circulating_cap'] * 10000)) * 100
-        # 打印前3只候选股的换手率计算明细
-        if DEBUG_SCREEN:
-            _turn_debug_codes = final_table.index[:min(3, len(final_table))]
-            for _tdc in _turn_debug_codes:
-                _v = float(vol_intra.get(_tdc, 0))
-                _cap = float(final_table.loc[_tdc, 'circulating_cap'])
-                _to = float(final_table.loc[_tdc, 'turnover'])
-                _dbg("      %s 成交=%.0f 流通股本(万股)=%.0f → 换手=%.1f%%" % (_tdc, _v, _cap, _to))
-        final_table['vwap_above_pct'] = final_table.index.map(vwap_above_ratio).fillna(0)
-        final_table['intraday_money'] = final_table.index.map(intraday_money_series).fillna(0)
-        # pct_chg 用分钟线收盘价重算，避免日线收盘价(15:00)与盘中不一致
-        _pre_close_map = t_day_basic['pre_close']
-        final_table['pct_chg'] = (final_table['close'] - _pre_close_map.reindex(final_table.index)) / _pre_close_map.reindex(final_table.index) * 100
-        mask_pro = (
-            (final_table['close'] >= final_table['vwap']) &
-            (final_table['upper_shadow'] <= _upper_shadow_use) &
-            (final_table['vol_ratio'] >= _vol_ratio_min_use) & (final_table['vol_ratio'] <= _vol_ratio_max_use) &
-            (final_table['turnover'] >= _turnover_min_use) & (final_table['turnover'] <= _turnover_max_use)
-        )
-        filtered_df = final_table[mask_pro]
-        _vwd_label = ' [已放宽]' if _try_relax else ''
-        _vwd_detail = ' [已放宽:上影%.0f%% 量比%.1f~%.1f 换手%.0f%%~%.0f%%]' % (
-            _upper_shadow_use, _vol_ratio_min_use, _vol_ratio_max_use, _turnover_min_use, _turnover_max_use) if _try_relax else ''
-        print("    [VWAP] 通过VWAP过滤的候选: %d (原候选: %d)%s" % (len(_vwap_pass_codes), len(vwap_above_ratio), _vwd_label))
-        print("    [精筛] 精筛通过: %d (候选: %d)%s" % (len(filtered_df), len(final_table), _vwd_detail))
-        # 打印每只候选股的精筛各条件明细
-        if DEBUG_SCREEN:
-            for _ci in final_table.index:
-                _cr = final_table.loc[_ci]
-                _chk = [
-                    ('close>=vwap' if _cr['close'] >= _cr['vwap'] else 'close<vwap', _cr['close'] >= _cr['vwap']),
-                    ('上影%.1f' % _cr['upper_shadow'], _cr['upper_shadow'] <= _upper_shadow_use),
-                    ('量比%.1f' % _cr['vol_ratio'], _cr['vol_ratio'] >= _vol_ratio_min_use and _cr['vol_ratio'] <= _vol_ratio_max_use),
-                    ('换手%.1f%%' % _cr['turnover'], _cr['turnover'] >= _turnover_min_use and _cr['turnover'] <= _turnover_max_use),
-                ]
-                _res = 'PASS' if all(v for _, v in _chk) else 'FAIL'
-                _details = ' '.join('%s%s' % (('✓' if v else '✗'), k) for k, v in _chk)
-                _dbg("      %s %s %s" % (_ci, _res, _details))
-        if _try_relax:
-            print("    [放宽] 大盘跌%.2f%% 上涨占比%.1f%% > %.0f%%, %s精筛条件" % (_sh_chg, _rise_ratio * 100, RELAX_RISE_RATIO_THRESHOLD * 100, _try_label))
-        if len(filtered_df) > 0 or _try_idx == len(_relax_try_modes) - 1:
-            _relax_used = _try_relax
-            break
-    
-    result['do_relax'] = _relax_used
+    _vwap_pass_codes = vwap_above_ratio[(vwap_above_ratio >= VWAP_ABOVE_MIN) & (vwap_above_ratio <= VWAP_ABOVE_MAX)].index.tolist()
+    print("    [VWAP] 通过VWAP过滤的候选: %d (原候选: %d)" % (len(_vwap_pass_codes), len(vwap_above_ratio)))
+    pre_picks = pre_picks[pre_picks.index.isin(_vwap_pass_codes)]
+    if len(pre_picks) == 0:
+        result['skipped_reason'] = 'VWAP过滤后无候选（全部不在%.0f%%~%.0f%%区间）' % (VWAP_ABOVE_MIN * 100, VWAP_ABOVE_MAX * 100)
+        return result
+
+    final_table = min_final.join(
+        pre_picks[['pct_chg', 'circulating_market_cap', 'circulating_cap', 'money']], how='inner')
+    final_table['turnover'] = (vol_intra / (final_table['circulating_cap'] * 10000)) * 100
+    final_table['vwap_above_pct'] = final_table.index.map(vwap_above_ratio).fillna(0)
+
+    mask_pro = (
+        (final_table['close'] >= final_table['vwap']) &
+        (final_table['upper_shadow'] <= UPPER_SHADOW_MAX) &
+        (final_table['vol_ratio'] >= VOL_RATIO_MIN) & (final_table['vol_ratio'] <= VOL_RATIO_MAX) &
+        (final_table['turnover'] >= TURNOVER_MIN) & (final_table['turnover'] <= TURNOVER_MAX)
+    )
+    filtered_df = final_table[mask_pro]
+    print("    [精筛] 精筛通过: %d (候选: %d)" % (len(filtered_df), len(final_table)))
     _fallback = False
     _filter_reasons = {}
     if len(filtered_df) == 0:
         if not FALLBACK_RANGE or len(FALLBACK_RANGE) < 2:
             result['skipped_reason'] = '精筛后无标的'
             return result
-        _fb_sorted = final_table.sort_values(by='intraday_money', ascending=False)
+        _fb_sorted = final_table.sort_values(by='money', ascending=False)
         _fb_start, _fb_end = FALLBACK_RANGE[0], FALLBACK_RANGE[1]
         _fb_total = len(_fb_sorted)
         if _fb_start >= _fb_total:
@@ -763,16 +636,16 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
             _row = final_table.loc[_c]
             if _row['close'] < _row['vwap']:
                 _reasons.append('VWAP')
-            if _row['upper_shadow'] > _upper_shadow_use:
+            if _row['upper_shadow'] > UPPER_SHADOW_MAX:
                 _reasons.append('上影%.1f%%' % _row['upper_shadow'])
-            if _row['vol_ratio'] < _vol_ratio_min_use:
-                _reasons.append('量比%.2f<%.1f' % (_row['vol_ratio'], _vol_ratio_min_use))
-            if _row['vol_ratio'] > _vol_ratio_max_use:
-                _reasons.append('量比%.2f>%.1f' % (_row['vol_ratio'], _vol_ratio_max_use))
-            if _row['turnover'] < _turnover_min_use:
-                _reasons.append('换手%.1f%%<%.0f%%' % (_row['turnover'], _turnover_min_use))
-            if _row['turnover'] > _turnover_max_use:
-                _reasons.append('换手%.1f%%>%.0f%%' % (_row['turnover'], _turnover_max_use))
+            if _row['vol_ratio'] < VOL_RATIO_MIN:
+                _reasons.append('量比%.2f<%.1f' % (_row['vol_ratio'], VOL_RATIO_MIN))
+            if _row['vol_ratio'] > VOL_RATIO_MAX:
+                _reasons.append('量比%.2f>%.1f' % (_row['vol_ratio'], VOL_RATIO_MAX))
+            if _row['turnover'] < TURNOVER_MIN:
+                _reasons.append('换手%.1f%%<%.0f%%' % (_row['turnover'], TURNOVER_MIN))
+            if _row['turnover'] > TURNOVER_MAX:
+                _reasons.append('换手%.1f%%>%.0f%%' % (_row['turnover'], TURNOVER_MAX))
             _filter_reasons[_c] = ','.join(_reasons) if _reasons else ''
         
         # 回退股量比/换手率过滤
@@ -823,9 +696,9 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
         _fallback = True
 
     if hasattr(filtered_df, 'sort_values'):
-        _sorted = filtered_df.sort_values(by='intraday_money', ascending=False)
+        _sorted = filtered_df.sort_values(by='money', ascending=False)
     else:
-        _sorted = filtered_df.sort(columns='intraday_money', ascending=False)
+        _sorted = filtered_df.sort(columns='money', ascending=False)
     picks = _sorted.head(TOP_N).copy(deep=True)
     if _fallback:
         result['skipped_reason'] = '精筛无标的->回退区间[%d,%d]' % (FALLBACK_RANGE[0], FALLBACK_RANGE[1])
@@ -995,20 +868,10 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
     
     # 每只股票的卖出记录：{code: {'sell_date': '', 'sell_price': 0, 'sold': False}}
     sell_records = {code: {'sell_date': '', 'sell_price': 0.0, 'sold': False, 'sell_reason': ''} for code in pick_codes}
-    _partial_sells = {code: [] for code in pick_codes}  # list of (price, shares_sold, reason)
-    _half_sold = {code: False for code in pick_codes}     # 半仓是否已卖出
-    _body_bottom = {code: float(t_day_basic.loc[code, 'open']) if code in t_day_basic.index else None for code in pick_codes}  # T日实体下沿
-    _proved_up = {code: False for code in pick_codes}     # T+1是否翻正过
-    _averaged_down = {code: False for code in pick_codes}  # 是否已补仓
-    _avg_down_shares = {code: 0 for code in pick_codes}    # 补仓数量
-    _avg_down_price = {code: 0.0 for code in pick_codes}   # 补仓价格
-
+    
     _pending = False
     
     import pandas as _pd
-    
-    _peak_rem = {code: None for code in pick_codes}
-    _trail_active = {code: False for code in pick_codes}
     
     # 逐日检查卖出条件
     for day_idx, sell_date in enumerate(sell_days):
@@ -1027,15 +890,11 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
         # 获取当日分钟线数据
         if SELL_MODE == 'loss_hold' and not is_final_day:
             _sell_end = sell_date + ' 15:00:00'
-        elif SELL_MODE == 'half_2pct_5pct_trail':
-            _sell_end = sell_date + ' 14:50:00'
-        elif SELL_MODE == 'body_break' and is_first_day:
-            _sell_end = sell_date + ' 14:50:00'
         else:
             _sell_end = sell_date + ' ' + SELL_TIME
         try:
             df_sm = get_price(unsold_codes, start_date=sell_date + ' 09:30:00',
-                              end_date=_sell_end, frequency='1m', fields=['close', 'high'], panel=False)
+                              end_date=_sell_end, frequency='1m', fields=['close'], panel=False)
         except Exception:
             df_sm = None
         
@@ -1058,8 +917,6 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
             # 获取卖出时间点的价格
             if SELL_MODE == 'loss_hold' and not is_final_day:
                 _sp = None
-            elif SELL_MODE == 'body_break':
-                _sp = float(_sub.iloc[-1]['close'])
             elif SELL_TIME == '15:00:00':
                 _sp = float(_sub.iloc[-1]['close'])
             elif SELL_TIME == '09:30:00':
@@ -1075,18 +932,16 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
                         _sp = float(_row['close'])
                         break
             
-            # 检查止损（half_2pct_5pct_trail/body_break 模式自行处理止损）
+            # 检查止损
             _stop_triggered = False
-            if SELL_MODE not in ('half_2pct_5pct_trail', 'body_break'):
-                for _i in range(len(_sub)):
-                    _row = _sub.iloc[_i]
-                    _c = float(_row['close'])
-                    _h = float(_row.get('high', _c))
-                    _thr_pct = (_h - bp) / bp * 100
-                    if _thr_pct <= STOP_LOSS_PCT:
-                        _sp = _c
-                        _stop_triggered = True
-                        break
+            for _i in range(len(_sub)):
+                _row = _sub.iloc[_i]
+                _c = float(_row['close'])
+                _pct = (_c - bp) / bp * 100
+                if _pct <= STOP_LOSS_PCT:
+                    _sp = _c
+                    _stop_triggered = True
+                    break
             
             # 判断是否卖出
             _should_sell = False
@@ -1110,157 +965,6 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
                         _should_sell = True
                         _sell_reason = '回本卖出'
                         break
-            elif SELL_MODE == 'body_break':
-                _bb = _body_bottom.get(code)
-                if is_first_day:
-                    if _bb is not None:
-                        for _i in range(len(_sub)):
-                            _row = _sub.iloc[_i]
-                            _c = float(_row['close'])
-                            _h = float(_row.get('high', _c))
-                            _thr_pct = (_h - bp) / bp * 100
-                            if _thr_pct <= STOP_LOSS_PCT:
-                                _sp = _c
-                                _should_sell = True
-                                _sell_reason = '止损'
-                                break
-                            if _c > bp and not _proved_up[code]:
-                                _proved_up[code] = True
-                            if _c < _bb and not _proved_up[code]:
-                                _sp = _c
-                                _should_sell = True
-                                _sell_reason = '跌破实体'
-                                break
-                elif is_final_day:
-                    _should_sell = True
-                    _sell_reason = '到期强卖'
-            elif SELL_MODE == 'half_2pct_5pct_trail':
-                # 计算总股数（与 details 区一致，用 DAILY_CAPITAL / picks * FALLBACK_RATIO）
-                _n_codes = len(pick_codes)
-                _ps_cap = DAILY_CAPITAL * (FALLBACK_POSITION_RATIO if _fallback else 1.0) / _n_codes if _n_codes else 0
-                _lots = int(_ps_cap / (bp * 100)) if bp > 0 else 0
-                _total_shares = _lots * 100
-                _half_shares = _total_shares // 2
-                _open_price = float(_sub.iloc[0]['close'])
-                _open_high = float(_sub.iloc[0].get('high', _open_price))
-                _open_pct = (_open_high - bp) / bp * 100
-
-                if not _half_sold[code]:
-                    # === 全仓阶段：先卖半仓 ===
-                    if _open_pct > 2 and _half_shares > 0:
-                        _partial_sells[code].append((_open_price, _half_shares, '开盘>2%卖半仓'))
-                        _half_sold[code] = True
-
-                    if not _half_sold[code]:
-                        _stop_price = bp * (1 + STOP_LOSS_PCT / 100)
-                        _stop_time_str = sell_date + ' 10:00:00'
-                        _stop_pending = False
-                        for _i in range(len(_sub)):
-                            _row = _sub.iloc[_i]
-                            _c = float(_row['close'])
-                            _h = float(_row.get('high', _c))
-                            _l = float(_row.get('low', _c))
-                            _t = str(_row.get('time', ''))[:19]
-                            _thr_pct = (_l - bp) / bp * 100
-                            
-                            # 补仓判断：T+1跌到-5%且未补仓
-                            if is_first_day and AVERAGING_DOWN_ENABLE and not _averaged_down[code]:
-                                _avg_trigger = bp * (1 + AVERAGING_DOWN_PCT / 100)
-                                if _l <= _avg_trigger:
-                                    _avg_down_shares[code] = _half_shares  # 补原仓位的一半
-                                    _avg_down_price[code] = _avg_trigger
-                                    _averaged_down[code] = True
-                                    _total_shares += _avg_down_shares[code]  # 更新总仓位
-                                    _half_shares = _total_shares // 2  # 更新半仓数量
-                            
-                            if _thr_pct <= STOP_LOSS_PCT:
-                                if _t < _stop_time_str:
-                                    _stop_pending = True
-                                    continue
-                                _partial_sells[code].append((_stop_price, _total_shares, '止损'))
-                                _half_sold[code] = True
-                                sell_records[code] = {
-                                    'sell_date': sell_date, 'sell_price': _stop_price,
-                                    'sold': True, 'sell_reason': '止损'
-                                }
-                                break
-                            else:
-                                if _stop_pending and _l > _stop_price:
-                                    _stop_pending = False
-                            if _thr_pct >= 2 and _half_shares > 0:
-                                _partial_sells[code].append((_c, _half_shares, '半仓2%止盈'))
-                                _half_sold[code] = True
-                                break
-                        
-                        # 到期强卖：如果半仓还没卖出，到期日强卖全部
-                        if is_final_day and not _half_sold[code] and not sell_records[code]['sold']:
-                            _last_p = float(_sub.iloc[-1]['close'])
-                            _partial_sells[code].append((_last_p, _total_shares, '到期强卖'))
-                            sell_records[code] = {
-                                'sell_date': sell_date, 'sell_price': _last_p,
-                                'sold': True, 'sell_reason': '到期强卖'
-                            }
-
-                if _half_sold[code] and not sell_records[code]['sold']:
-                    # === 剩余半仓阶段：peak达阈值后激活回撤 ===
-                    _remaining = _total_shares - sum(_s for _, _s, _ in _partial_sells[code])
-                    if _remaining <= 0:
-                        continue
-                    if _peak_rem[code] is None:
-                        _peak_rem[code] = _open_high
-                    _sold_this_day = False
-                    _stop_price = bp * (1 + STOP_LOSS_PCT / 100)
-                    _stop_time_str = sell_date + ' 10:00:00'
-                    _stop_pending = False
-
-                    for _i in range(len(_sub)):
-                        _row = _sub.iloc[_i]
-                        _c = float(_row['close'])
-                        _h = float(_row.get('high', _c))
-                        _l = float(_row.get('low', _c))
-                        _t = str(_row.get('time', ''))[:19]
-                        _thr_pct = (_l - bp) / bp * 100
-                        _cnt_pct = (_c - bp) / bp * 100
-
-                        if _thr_pct <= STOP_LOSS_PCT:
-                            if _t < _stop_time_str:
-                                _stop_pending = True
-                            else:
-                                _partial_sells[code].append((_stop_price, _remaining, '止损'))
-                                _sold_this_day = True
-                                break
-                        else:
-                            if _stop_pending and _l > _stop_price:
-                                _stop_pending = False
-
-                        if _h > _peak_rem[code]:
-                            _peak_rem[code] = _h
-
-                        _peak_rem_pct = (_peak_rem[code] - bp) / bp * 100
-                        if _peak_rem_pct >= TRAIL_ACTIVATE_PCT:
-                            _trail_active[code] = True
-
-                        if _trail_active[code] and (_peak_rem_pct - _cnt_pct) >= TRAIL_PCT:
-                            _partial_sells[code].append((_c, _remaining, '%.0f%%回撤止盈' % TRAIL_PCT))
-                            _sold_this_day = True
-                            break
-
-                    if is_final_day and not _sold_this_day:
-                        _last_p = float(_sub.iloc[-1]['close'])
-                        _partial_sells[code].append((_last_p, _remaining, '到期强卖'))
-                        _sold_this_day = True
-
-                    if _sold_this_day:
-                        _total_val = sum(_p * _s for _p, _s, _ in _partial_sells[code])
-                        _total_sold = sum(_s for _, _s, _ in _partial_sells[code])
-                        _avg_p = _total_val / _total_sold if _total_sold > 0 else buy_prices[code]
-                        _reasons = ','.join(_r for _, _, _r in _partial_sells[code])
-                        sell_records[code] = {
-                            'sell_date': sell_date,
-                            'sell_price': _avg_p,
-                            'sold': True,
-                            'sell_reason': _reasons
-                        }
             elif is_first_day and is_final_day:
                 _should_sell = True
                 _sell_reason = '到期强卖'
@@ -1284,189 +988,9 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
                     'sell_reason': _sell_reason
                 }
     
-    # --- 停牌补数据：顺延交易日获取数据，直到补到或超过今日 ---
-    _unsold_not_pending = [c for c in pick_codes
-                           if not sell_records[c]['sold'] and not _pending]
-    if _unsold_not_pending and sell_days:
-        _last_sell_day = sell_days[-1]
-        try:
-            _all_td = list(get_trade_days(start_date=_last_sell_day, end_date=_today_str))
-        except Exception:
-            _all_td = []
-        _supp_dates = [str(d) for d in _all_td if str(d) > _last_sell_day]
-        
-        for _sd in _supp_dates:
-            _still_unsold = [c for c in pick_codes
-                             if not sell_records[c]['sold'] and not _pending]
-            if not _still_unsold:
-                break
-            _is_last_supp = (_sd == _supp_dates[-1])
-            try:
-                _df_s = get_price(_still_unsold,
-                                  start_date=_sd + ' 09:30:00',
-                                  end_date=_sd + ' 14:50:00',
-                                  frequency='1m',
-                                  fields=['close', 'high', 'low'], panel=False)
-            except Exception:
-                _df_s = None
-            if _df_s is None or len(_df_s) == 0:
-                continue
-            _df_sf = _df_s.reset_index()
-            if 'index' in _df_sf.columns:
-                _df_sf.drop('index', axis=1, inplace=True)
-            _df_sf = _df_sf.loc[:, ~_df_sf.columns.duplicated()]
-            _df_sf = _df_sf.sort_values(['code', 'time'])
-            
-            for code in _still_unsold:
-                bp = buy_prices[code]
-                _sub = _df_sf[_df_sf['code'] == code]
-                if len(_sub) == 0:
-                    continue
-                _n_codes = len(pick_codes)
-                _ps_cap = DAILY_CAPITAL * (FALLBACK_POSITION_RATIO if _fallback else 1.0) / _n_codes if _n_codes else 0
-                _lots = int(_ps_cap / (bp * 100)) if bp > 0 else 0
-                _total_shares = _lots * 100
-                _half_shares = _total_shares // 2
-                _open_high = float(_sub.iloc[0].get('high', _sub.iloc[0]['close']))
-                
-                if _peak_rem[code] is None:
-                    _peak_rem[code] = _open_high
-                _sold_this_day = False
-                
-                if not _half_sold[code]:
-                    _open_price = float(_sub.iloc[0]['close'])
-                    _open_pct = (_open_high - bp) / bp * 100
-                    if _open_pct > 2 and _half_shares > 0:
-                        _partial_sells[code].append((_open_price, _half_shares, '开盘>2%卖半仓'))
-                        _half_sold[code] = True
-                    if not _half_sold[code]:
-                        _stop_price = bp * (1 + STOP_LOSS_PCT / 100)
-                        _stop_time_str = _sd + ' 10:00:00'
-                        _stop_pending = False
-                        _is_t1_supp = (_sd == _supp_dates[0])  # 是否是T+1
-                        for _i in range(len(_sub)):
-                            _row = _sub.iloc[_i]
-                            _c = float(_row['close'])
-                            _l = float(_row.get('low', _c))
-                            _h = float(_row.get('high', _c))
-                            _t = str(_row.get('time', ''))[:19]
-                            _thr_pct = (_l - bp) / bp * 100
-                            
-                            # 补仓判断：T+1跌到-5%且未补仓
-                            if _is_t1_supp and AVERAGING_DOWN_ENABLE and not _averaged_down[code]:
-                                _avg_trigger = bp * (1 + AVERAGING_DOWN_PCT / 100)
-                                if _l <= _avg_trigger:
-                                    _avg_down_shares[code] = _half_shares  # 补原仓位的一半
-                                    _avg_down_price[code] = _avg_trigger
-                                    _averaged_down[code] = True
-                                    _total_shares += _avg_down_shares[code]  # 更新总仓位
-                                    _half_shares = _total_shares // 2  # 更新半仓数量
-                            
-                            if _thr_pct <= STOP_LOSS_PCT:
-                                if _t < _stop_time_str:
-                                    _stop_pending = True
-                                    continue
-                                _partial_sells[code].append((_stop_price, _total_shares, '止损'))
-                                _half_sold[code] = True
-                                sell_records[code] = {
-                                    'sell_date': _sd, 'sell_price': _stop_price,
-                                    'sold': True, 'sell_reason': '止损'
-                                }
-                                _sold_this_day = True
-                                break
-                            else:
-                                if _stop_pending and _l > _stop_price:
-                                    _stop_pending = False
-                            if _thr_pct >= 2 and _half_shares > 0:
-                                _partial_sells[code].append((_c, _half_shares, '半仓2%止盈'))
-                                _half_sold[code] = True
-                                break
-                    
-                    # 到期强卖：如果半仓还没卖出，最后一个补充日强卖全部
-                    if _is_last_supp and not _half_sold[code] and not sell_records[code]['sold']:
-                        _last_p = float(_sub.iloc[-1]['close'])
-                        _partial_sells[code].append((_last_p, _total_shares, '到期强卖'))
-                        sell_records[code] = {
-                            'sell_date': _sd, 'sell_price': _last_p,
-                            'sold': True, 'sell_reason': '到期强卖'
-                        }
-                        _sold_this_day = True
-                
-                if _half_sold[code] and not sell_records[code]['sold']:
-                    _remaining = _total_shares - sum(_s for _, _s, _ in _partial_sells[code])
-                    if _remaining <= 0:
-                        continue
-                    _stop_price = bp * (1 + STOP_LOSS_PCT / 100)
-                    _stop_time_str = _sd + ' 10:00:00'
-                    _stop_pending = False
-                    for _i in range(len(_sub)):
-                        _row = _sub.iloc[_i]
-                        _c = float(_row['close'])
-                        _h = float(_row.get('high', _c))
-                        _l = float(_row.get('low', _c))
-                        _t = str(_row.get('time', ''))[:19]
-                        _thr_pct = (_l - bp) / bp * 100
-                        _cnt_pct = (_c - bp) / bp * 100
-                        
-                        if _thr_pct <= STOP_LOSS_PCT:
-                            if _t < _stop_time_str:
-                                _stop_pending = True
-                            else:
-                                _partial_sells[code].append((_stop_price, _remaining, '止损'))
-                                _sold_this_day = True
-                                break
-                        else:
-                            if _stop_pending and _l > _stop_price:
-                                _stop_pending = False
-                        if _h > _peak_rem[code]:
-                            _peak_rem[code] = _h
-                        _peak_rem_pct = (_peak_rem[code] - bp) / bp * 100
-                        if _peak_rem_pct >= TRAIL_ACTIVATE_PCT:
-                            _trail_active[code] = True
-                        if _trail_active[code] and (_peak_rem_pct - _cnt_pct) >= TRAIL_PCT:
-                            _partial_sells[code].append((_c, _remaining, '%.0f%%回撤止盈' % TRAIL_PCT))
-                            _sold_this_day = True
-                            break
-                    
-                    if _is_last_supp and not _sold_this_day:
-                        _last_p = float(_sub.iloc[-1]['close'])
-                        _partial_sells[code].append((_last_p, _remaining, '到期强卖'))
-                        _sold_this_day = True
-                    
-                    if _sold_this_day:
-                        _total_val = sum(_p * _s for _p, _s, _ in _partial_sells[code])
-                        _total_sold = sum(_s for _, _s, _ in _partial_sells[code])
-                        _avg_p = _total_val / _total_sold if _total_sold > 0 else buy_prices[code]
-                        _reasons = ','.join(_r for _, _, _r in _partial_sells[code])
-                        sell_records[code] = {
-                            'sell_date': _sd, 'sell_price': _avg_p,
-                            'sold': True, 'sell_reason': _reasons
-                        }
-    
     # 处理未卖出的股票（pending状态）
     for code in pick_codes:
         if not sell_records[code]['sold']:
-            # half_2pct_5pct_trail 模式：有部分成交但未清仓，先算加权均价
-            if SELL_MODE == 'half_2pct_5pct_trail' and _partial_sells[code]:
-                _total_val = sum(_p * _s for _p, _s, _ in _partial_sells[code])
-                _total_sold = sum(_s for _, _s, _ in _partial_sells[code])
-                _avg_p = _total_val / _total_sold if _total_sold > 0 else buy_prices[code]
-                _reasons = ','.join(_r for _, _, _r in _partial_sells[code])
-                if _pending:
-                    sell_records[code] = {
-                        'sell_date': sell_days[-1] if sell_days else '',
-                        'sell_price': _avg_p,
-                        'sold': True,
-                        'sell_reason': _reasons + ',待揭晓'
-                    }
-                else:
-                    sell_records[code] = {
-                        'sell_date': sell_days[-1] if sell_days else '',
-                        'sell_price': _avg_p,
-                        'sold': True,
-                        'sell_reason': _reasons + ',数据缺失'
-                    }
-                continue
             if _pending:
                 sell_records[code] = {
                     'sell_date': sell_days[-1] if sell_days else '',
@@ -1488,30 +1012,6 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
     _capital = DAILY_CAPITAL * FALLBACK_POSITION_RATIO if _fallback else DAILY_CAPITAL
     _cap_per = _capital / _n_picks if _n_picks else 0.0
     details = []
-
-    # --- 获取持有期内多日最高价（用于理论准确率和理论最大盈亏）---
-    _max_high_map = {}   # {code: max_high_price}
-    if not _pending and sell_days and pick_codes:
-        for _sd in sell_days:
-            if _sd >= _today_str:
-                continue
-            try:
-                _df_high = get_price(pick_codes, count=1, end_date=_sd, frequency='daily',
-                                      fields=['high'], panel=False)
-                if _df_high is not None and len(_df_high) > 0:
-                    _df_hf = _df_high.reset_index()
-                    if 'index' in _df_hf.columns:
-                        _df_hf.drop('index', axis=1, inplace=True)
-                    _df_hf = _df_hf.loc[:, ~_df_hf.columns.duplicated()]
-                    for _c in pick_codes:
-                        _cd = _df_hf[_df_hf['code'] == _c]
-                        if len(_cd) > 0:
-                            _h = float(_cd.iloc[-1]['high'])
-                            if _c not in _max_high_map or _h > _max_high_map[_c]:
-                                _max_high_map[_c] = _h
-            except Exception:
-                pass
-
     total_buy = 0.0
     total_sell = 0.0
     for code in pick_codes:
@@ -1522,17 +1022,9 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
         # 按手取整：1手=100股
         _lots = int(_cap_per / (bp * 100)) if bp > 0 else 0
         shares = _lots * 100
-        # 原仓位盈亏
         pnl = (sp - bp) * shares
-        # 补仓部分盈亏
-        if _avg_down_shares[code] > 0:
-            pnl += (sp - _avg_down_price[code]) * _avg_down_shares[code]
         total_buy += bp * shares
         total_sell += sp * shares
-        # 补仓部分也计入总买卖
-        if _avg_down_shares[code] > 0:
-            total_buy += _avg_down_price[code] * _avg_down_shares[code]
-            total_sell += sp * _avg_down_shares[code]
         def _g(col):
             try:
                 return float(picks.loc[code, col])
@@ -1559,17 +1051,7 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
             'vwap_above_pct': round(_g('vwap_above_pct'), 2),
             'fallback': _fallback,
             'l1_fallback': _l1_fallback,
-            'relaxed': _relax_used,
             'filter_reason': _filter_reasons.get(code, ''),
-            'theo_correct': (_max_high_map.get(code) is not None and _max_high_map.get(code) > bp),
-            'max_pnl': round((_max_high_map.get(code, bp) - bp) * shares, 2) if shares > 0 else 0.0,
-            'max_pnl_pct': round((_max_high_map.get(code, bp) - bp) / bp * 100, 2) if bp > 0 else 0.0,
-            'theo_2pct_pnl': round(bp * 0.02 * shares, 2) if (shares > 0 and _max_high_map.get(code, bp) >= bp * 1.02) else (round((_body_bottom.get(code, bp) - bp) * shares, 2) if shares > 0 else 0.0),
-            'theo_2pct_pnl_pct': round(2.0, 2) if (shares > 0 and _max_high_map.get(code, bp) >= bp * 1.02) else (round((_body_bottom.get(code, bp) - bp) / bp * 100, 2) if bp > 0 and shares > 0 else 0.0),
-            'partial_sells': _partial_sells.get(code, []),
-            'avg_down': _averaged_down.get(code, False),
-            'avg_down_price': round(_avg_down_price.get(code, 0.0), 3),
-            'avg_down_shares': _avg_down_shares.get(code, 0),
         })
 
     result['picks_count'] = len(pick_codes)
@@ -1593,42 +1075,7 @@ def screen_one_day(target_date, sell_days, stocks_info_cache=None):
             _minute_rows.append(_mc_df)
         if _minute_rows:
             import pandas as _pd3
-            _minute_all = _pd3.concat(_minute_rows, ignore_index=True)
-
-            # --- 拉取 T+1~T+N 分钟数据并 join ---
-            if not _pending and sell_days:
-                _minute_all['_time_key'] = _minute_all['time'].apply(
-                    lambda _t: str(_t)[11:19] if len(str(_t)) > 10 else str(_t))
-                for _si, _sd in enumerate(sell_days):
-                    _tag = 't%d' % (_si + 1)
-                    try:
-                        _sd_df = get_price(pick_codes, start_date=_sd + ' 09:30:00',
-                                           end_date=_sd + ' 15:00:00', frequency='1m',
-                                           fields=['open', 'close', 'high', 'low', 'avg', 'volume'], panel=False)
-                        if _sd_df is None or len(_sd_df) == 0:
-                            continue
-                        _sd_flat = _sd_df.reset_index()
-                        if 'index' in _sd_flat.columns:
-                            _sd_flat.drop('index', axis=1, inplace=True)
-                        _sd_flat = _sd_flat.loc[:, ~_sd_flat.columns.duplicated()]
-                        _sd_flat['_time_key'] = _sd_flat['time'].apply(
-                            lambda _t: str(_t)[11:19] if len(str(_t)) > 10 else str(_t))
-                        _sd_join = _sd_flat[['code', '_time_key', 'open', 'close', 'high', 'low', 'avg', 'volume']].copy()
-                        _sd_join.columns = ['code', '_time_key',
-                                            '%s_open' % _tag, '%s_close' % _tag,
-                                            '%s_high' % _tag, '%s_low' % _tag,
-                                            '%s_avg' % _tag, '%s_volume' % _tag]
-                        _minute_all = _minute_all.merge(_sd_join, on=['code', '_time_key'], how='left')
-                        _minute_all['%s_pnl_pct_vs_buy' % _tag] = None
-                        _mask = _minute_all['%s_close' % _tag].notna() & (_minute_all['buy_price'] != 0)
-                        _minute_all.loc[_mask, '%s_pnl_pct_vs_buy' % _tag] = (
-                            (_minute_all.loc[_mask, '%s_close' % _tag] - _minute_all.loc[_mask, 'buy_price'])
-                            / _minute_all.loc[_mask, 'buy_price'] * 100)
-                    except Exception:
-                        pass
-                _minute_all.drop('_time_key', axis=1, inplace=True)
-
-            result['minute_data'] = _minute_all
+            result['minute_data'] = _pd3.concat(_minute_rows, ignore_index=True)
         else:
             result['minute_data'] = None
     except Exception:
@@ -1674,8 +1121,6 @@ def run_month(backtest_str):
 
     print("=" * 100)
     _mode_desc = {'delay': '延迟卖出(%d天,定时10:45检查)' % DELAY_SELL_DAYS, 'win_hold': '盈利持有(T+1盈->T+2卖,亏->T+1卖)', 'loss_hold': '亏损持有(%d天,全天扫描回本卖)' % DELAY_SELL_DAYS}
-    _mode_desc['half_2pct_5pct_trail'] = '半仓2%%止盈+半仓peak%.0f%%激活%.0f%%回撤(持有%d天)' % (TRAIL_ACTIVATE_PCT, TRAIL_PCT, DELAY_SELL_DAYS)
-    _mode_desc['body_break'] = '跌破实体止损(T+1翻正则持有到T+%d强制卖)' % BODY_BREAK_HOLD_DAYS
     _mode_label = _mode_desc.get(SELL_MODE, SELL_MODE)
     if _is_date_mode:
         print("【单日回测】 日期: %s  模式: %s" % (backtest_str, _mode_label))
@@ -1708,8 +1153,6 @@ def run_month(backtest_str):
         _sell_days = []
         if SELL_MODE == 'win_hold':
             _max_delay = 2
-        elif SELL_MODE == 'body_break':
-            _max_delay = BODY_BREAK_HOLD_DAYS
         else:
             _max_delay = DELAY_SELL_DAYS + 1
         for _i in range(1, _max_delay + 1):
@@ -1724,6 +1167,7 @@ def run_month(backtest_str):
         sell_days_str = ','.join(_sell_days) if len(_sell_days) > 1 else _sell_days[0]
 
         print("\n[%d/%d] 选股日: %s  卖出日: %s" % (_idx + 1, len(month_days), d_str, sell_days_str))
+        print("    [模式] %s" % _mode_label)
         try:
             r = screen_one_day(d_str, _sell_days, stocks_info_cache=stocks_info_cache)
         except Exception as e:
@@ -1743,8 +1187,8 @@ def run_month(backtest_str):
             _scl1 = r.get('sector_chg_l1', {})
             _scl2 = r.get('sector_chg_l2', {})
             _scl3 = r.get('sector_chg_l3', {})
-            print("       %-12s %-8s %6s %7s %7s %5s %6s %6s %6s %7s %-10s %-10s %-10s %-10s %8s %8s %8s" % (
-                "代码", "名称", "市值(亿)", "买入价", "涨幅%", "量比", "换手%", "上影%", "VWAP%", "卖出价", "卖出日期", "一级行业", "二级行业", "三级行业", "盈亏", "最高盈亏", "卖出原因"))
+            print("       %-12s %-8s %6s %7s %7s %5s %6s %6s %6s %7s %-10s %-10s %-10s %-10s %8s %8s" % (
+                "代码", "名称", "市值(亿)", "买入价", "涨幅%", "量比", "换手%", "上影%", "VWAP%", "卖出价", "卖出日期", "一级行业", "二级行业", "三级行业", "盈亏", "卖出原因"))
             for d in r['details']:
                 _fb_tag = ' [回退]' if d.get('fallback') else ''
                 _filter_tag = '(%s)' % d.get('filter_reason', '') if d.get('filter_reason') else ''
@@ -1760,12 +1204,12 @@ def run_month(backtest_str):
                 _l2f = '%s%+6.2f%%' % (_pad(_s2, 8), _l2v)
                 _l3f = '%s%+6.2f%%' % (_s3, _l3v)
                 _sell_reason = d.get('sell_reason', '')
-                print("       %-12s %-8s %6.1f %7.2f %+6.2f%% %5.1f %5.1f%% %5.2f %5.0f%% %7.2f %s  %s  %s  %s %+8.2f %+8.2f %-8s%s%s%s" % (
+                print("       %-12s %-8s %6.1f %7.2f %+6.2f%% %5.1f %5.1f%% %5.2f %5.0f%% %7.2f %s  %s  %s  %s %+8.2f %-8s%s%s%s" % (
                     d['code'], d['name'], d['mkt_cap'], d['buy'],
                     d['pct_chg'], d['vol_ratio'], d['turnover'], d['upper_shadow'],
                     d.get('vwap_above_pct', 0) * 100,
                     d['sell'], _sell_date,
-                    _l1f, _l2f, _l3f, d['pnl'], d.get('max_pnl', 0), _sell_reason, _fb_tag, _filter_tag, _l1_fb_tag))
+                    _l1f, _l2f, _l3f, d['pnl'], _sell_reason, _fb_tag, _filter_tag, _l1_fb_tag))
             _check_global_risks(r['details'], r['date'])
         # 大盘 + 情绪比值信息（每天都打印）
         if 'sentiment_ratio' in r:
@@ -1804,18 +1248,6 @@ def run_month(backtest_str):
         (_win_days / len(traded) * 100) if traded else 0.0))
     print("合计买入: %.2f | 合计卖出: %.2f" % (_total_buy, _total_sell))
     print("本金: %.2f | 合计盈亏: %+.2f  (%+.2f%%)" % (DAILY_CAPITAL, _total_pnl, _total_pct))
-    _theo_c = sum(1 for r in traded for d in r.get('details', []) if d.get('theo_correct'))
-    _theo_t = sum(1 for r in traded for d in r.get('details', []) if d.get('theo_correct') is not None)
-    print("选股准确率(持有期内最高价>买入价): %d/%d (%.1f%%)" % (_theo_c, _theo_t, _theo_c / _theo_t * 100 if _theo_t else 0.0))
-    _total_max_pnl = sum(d.get('max_pnl', d.get('pnl', 0)) for r in traded for d in r.get('details', []))
-    _total_max_pct = (_total_max_pnl / DAILY_CAPITAL * 100) if DAILY_CAPITAL else 0.0
-    print("理论最大盈亏(卖在持有期最高价): %+.2f  (%+.2f%%)" % (_total_max_pnl, _total_max_pct))
-    _total_2pct_pnl = sum(d.get('theo_2pct_pnl', 0) for r in traded for d in r.get('details', []))
-    _total_2pct_pct = (_total_2pct_pnl / DAILY_CAPITAL * 100) if DAILY_CAPITAL else 0.0
-    _2pct_win = sum(1 for r in traded for d in r.get('details', []) if d.get('theo_2pct_pnl_pct', 0) > 0)
-    _2pct_total = sum(1 for r in traded for d in r.get('details', []) if 'theo_2pct_pnl' in d)
-    print("理论2%%止盈/开盘价止损盈亏: %+.2f  (%+.2f%%) | 止盈: %d | 止损: %d" % (
-        _total_2pct_pnl, _total_2pct_pct, _2pct_win, _2pct_total - _2pct_win))
 
     # --- 按星期统计 ---
     _weekday_names = ['周一', '周二', '周三', '周四', '周五']
@@ -1864,77 +1296,30 @@ def run_month(backtest_str):
             (_fb_win / len(_fb_details) * 100) if _fb_details else 0.0))
         print("回退股盈亏: %+.2f  (%+.2f%%)" % (_fb_pnl, _fb_pct))
 
-    _rlx_details = [d for r in traded for d in r.get('details', []) if d.get('relaxed') and not d.get('fallback')]
-    _rlx_buy  = sum(d.get('buy', 0) * d.get('shares', 0) for d in _rlx_details)
-    _rlx_sell = sum(d.get('sell', 0) * d.get('shares', 0) for d in _rlx_details)
-    _rlx_pnl  = _rlx_sell - _rlx_buy
-    _rlx_pct  = (_rlx_pnl / _rlx_buy * 100) if _rlx_buy else 0.0
-    _rlx_win  = sum(1 for d in _rlx_details if d.get('pnl', 0) > 0)
-    _rlx_lose = sum(1 for d in _rlx_details if d.get('pnl', 0) < 0)
-    print("放宽股:   %d只 | 盈利: %d | 亏损: %d | 胜率: %.1f%% | 盈亏: %+.2f (%+.2f%%)" % (
-        len(_rlx_details), _rlx_win, _rlx_lose,
-        (_rlx_win / len(_rlx_details) * 100) if _rlx_details else 0.0,
-        _rlx_pnl, _rlx_pct))
-    _rlx_failed = [d for r in traded for d in r.get('details', []) if d.get('relaxed') and d.get('fallback')]
-    if _rlx_failed:
-        print("  放宽未中→回退: %d只(未计入上列)" % len(_rlx_failed))
-    if not _rlx_details and not _rlx_failed:
-        print("  (未触发放宽条件)")
-
-    # --- 补仓统计 ---
-    _avg_details = [d for r in traded for d in r.get('details', []) if d.get('avg_down')]
-    if _avg_details:
-        _avg_total_pnl = sum(d.get('pnl', 0) for d in _avg_details)
-        _avg_orig_pnl = sum((d['sell'] - d['buy']) * d['shares'] for d in _avg_details)
-        _avg_extra_pnl = sum((d['sell'] - d['avg_down_price']) * d['avg_down_shares'] for d in _avg_details)
-        _avg_win = sum(1 for d in _avg_details if d.get('pnl', 0) > 0)
-        _avg_lose = sum(1 for d in _avg_details if d.get('pnl', 0) < 0)
-        _avg_cost = sum(d['avg_down_price'] * d['avg_down_shares'] for d in _avg_details)
-        print("补仓股:   %d只 | 盈利: %d | 亏损: %d | 胜率: %.1f%% | 总盈亏: %+.2f (原仓%+.2f + 补仓%+.2f)" % (
-            len(_avg_details), _avg_win, _avg_lose,
-            (_avg_win / len(_avg_details) * 100) if _avg_details else 0.0,
-            _avg_total_pnl, _avg_orig_pnl, _avg_extra_pnl))
-        print("  补仓成本: %.2f | 补仓盈亏: %+.2f (%+.2f%%)" % (
-            _avg_cost, _avg_extra_pnl, (_avg_extra_pnl / _avg_cost * 100) if _avg_cost else 0.0))
-    else:
-        print("  (未触发补仓)")
-
     _all_details = [d for r in traded for d in r.get('details', [])]
     if _all_details:
         _reason_stats = {}
         for d in _all_details:
             _reason = d.get('sell_reason', '未知')
             if _reason not in _reason_stats:
-                _reason_stats[_reason] = {'count': 0, 'pnl': 0.0, 'breakdown': {}}
+                _reason_stats[_reason] = {'count': 0, 'pnl': 0.0}
             _reason_stats[_reason]['count'] += 1
             _reason_stats[_reason]['pnl'] += d.get('pnl', 0)
-            _bps = d.get('partial_sells', [])
-            if _bps:
-                for _price, _shares, _r in _bps:
-                    _bp = d.get('buy', 0)
-                    _pnl_part = (_price - _bp) * _shares
-                    if _r not in _reason_stats[_reason]['breakdown']:
-                        _reason_stats[_reason]['breakdown'][_r] = 0.0
-                    _reason_stats[_reason]['breakdown'][_r] += _pnl_part
         _reason_order = ['盈利卖出', '亏损卖出', '回本卖出', '到期强卖', '止损', '待揭晓', '数据缺失']
         _shown = set()
         print("\n【按卖出原因统计】")
-        print("-" * 100)
-        print("%-10s  %8s  %12s  %s" % ("卖出原因", "次数", "盈亏金额", "盈亏组成"))
-        print("-" * 100)
+        print("-" * 70)
+        print("%-10s  %8s  %12s" % ("卖出原因", "次数", "盈亏金额"))
+        print("-" * 70)
         for _reason in _reason_order:
             if _reason in _reason_stats:
                 _s = _reason_stats[_reason]
-                _bd = _s.get('breakdown', {})
-                _bd_str = ' | '.join('%s: %+7.2f' % (k, v) for k, v in sorted(_bd.items(), key=lambda x: -x[1])) if _bd else ''
-                print("%-10s  %8d  %+12.2f  %s" % (_reason, _s['count'], _s['pnl'], _bd_str))
+                print("%-10s  %8d  %+12.2f" % (_reason, _s['count'], _s['pnl']))
                 _shown.add(_reason)
         for _reason, _s in _reason_stats.items():
             if _reason not in _shown:
-                _bd = _s.get('breakdown', {})
-                _bd_str = ' | '.join('%s: %+7.2f' % (k, v) for k, v in sorted(_bd.items(), key=lambda x: -x[1])) if _bd else ''
-                print("%-10s  %8d  %+12.2f  %s" % (_reason, _s['count'], _s['pnl'], _bd_str))
-        print("-" * 100)
+                print("%-10s  %8d  %+12.2f" % (_reason, _s['count'], _s['pnl']))
+        print("-" * 70)
 
         _vwap_groups = [
             ('VWAP>=98%%', [d for d in _all_details if d.get('vwap_above_pct', 0) >= 0.98]),
@@ -1958,17 +1343,16 @@ def run_month(backtest_str):
 
     # 每日明细表
     print("\n【每日盈亏明细】")
-    print("-" * 145)
-    print("%-12s  %-12s  %-12s  %6s  %12s  %12s  %12s  %8s  %12s  %10s  %8s" % (
-        "选股日", "卖出日", "大盘涨跌", "只数", "买入", "卖出", "盈亏", "盈亏%", "最高盈亏", "成交额(亿)", "情绪比值"))
-    print("-" * 145)
+    print("-" * 130)
+    print("%-12s  %-12s  %-12s  %6s  %12s  %12s  %12s  %8s  %10s  %8s" % (
+        "选股日", "卖出日", "大盘涨跌", "只数", "买入", "卖出", "盈亏", "盈亏%", "成交额(亿)", "情绪比值"))
+    print("-" * 130)
     for r in all_results:
         if r['picks_count'] > 0:
             _tag = ' [待揭晓]' if r.get('pending') else ''
             _sh_chg_str = "%+.2f%%" % r.get('sh_change', 0.0)
             _money_yi = r.get('sh_total_money', 0) / 1e8
             _sent_val = r.get('sentiment_ratio', 0.0)
-            _day_max_pnl = sum(d.get('max_pnl', d.get('pnl', 0)) for d in r.get('details', []))
             # 计算实际卖出日期范围
             _sell_dates = [d.get('sell_date', '') for d in r.get('details', []) if d.get('sell_date')]
             if _sell_dates:
@@ -1979,10 +1363,10 @@ def run_month(backtest_str):
                     _sell_day_str = '%s~%s' % (_sell_dates[0], _sell_dates[-1])
             else:
                 _sell_day_str = r['next_day']
-            print("%-12s  %-12s  %-12s  %6d  %12.2f  %12.2f  %+12.2f  %+7.2f%%  %+12.2f%s  %10.0f  %8.2f" % (
+            print("%-12s  %-12s  %-12s  %6d  %12.2f  %12.2f  %+12.2f  %+7.2f%%%s  %10.0f  %8.2f" % (
                 r['date'], _sell_day_str, _sh_chg_str, r['picks_count'],
-                r['total_buy'], r['total_sell'], r['total_pnl'], r['pnl_pct'],
-                _day_max_pnl, _tag, _money_yi, _sent_val))
+                r['total_buy'], r['total_sell'], r['total_pnl'], r['pnl_pct'], _tag,
+                _money_yi, _sent_val))
         else:
             _sh_chg_str = "%+.2f%%" % r.get('sh_change', 0.0)
             _money_yi = r.get('sh_total_money', 0) / 1e8
@@ -1990,7 +1374,7 @@ def run_month(backtest_str):
             print("%-12s  %-12s  %-12s  %6s  %-s" % (
                 r['date'], r['next_day'], _sh_chg_str, '-',
                 '跳过: ' + r.get('skipped_reason', '')))
-    print("-" * 145)
+    print("-" * 130)
     print("=" * 100)
 
     # --- CSV 导出 ---
@@ -2085,10 +1469,7 @@ def _export_csv(backtest_str, all_results):
 
     _minute_path = '%sbacktest_%s_minute.csv' % (_prefix, backtest_str)
     _min_headers = ['选股日', '代码', '名称', '买入价', '时间', '开盘', '收盘', '最高', '最低',
-                    '均价', '成交量', 'vs买入价盈亏%',
-                    'T+1开盘', 'T+1收盘', 'T+1最高', 'T+1最低', 'T+1均价', 'T+1成交量', 'T+1vs买入价盈亏%',
-                    'T+2开盘', 'T+2收盘', 'T+2最高', 'T+2最低', 'T+2均价', 'T+2成交量', 'T+2vs买入价盈亏%',
-                    'T+3开盘', 'T+3收盘', 'T+3最高', 'T+3最低', 'T+3均价', 'T+3成交量', 'T+3vs买入价盈亏%']
+                    '均价', '成交量', 'vs买入价盈亏%']
     _min_count = 0
     with open(_minute_path, 'wb') as f:
         f.write(codecs.BOM_UTF8)
@@ -2102,7 +1483,6 @@ def _export_csv(backtest_str, all_results):
                 continue
             _date_str = r['date']
             for _, _row in _md.iterrows():
-                _getf = lambda _k: float(_row.get(_k, 0)) if _row.get(_k) is not None and str(_row.get(_k)) != 'nan' else ''
                 _out_row = [
                     _date_str,
                     _row.get('code', ''),
@@ -2116,27 +1496,6 @@ def _export_csv(backtest_str, all_results):
                     round(float(_row.get('avg', 0)), 3),
                     int(_row.get('volume', 0)),
                     round(float(_row.get('pnl_pct_vs_buy', 0)), 2),
-                    _getf('t1_open'),
-                    _getf('t1_close'),
-                    _getf('t1_high'),
-                    _getf('t1_low'),
-                    _getf('t1_avg'),
-                    _getf('t1_volume'),
-                    round(float(_row.get('t1_pnl_pct_vs_buy', 0)), 2) if _row.get('t1_pnl_pct_vs_buy') is not None and str(_row.get('t1_pnl_pct_vs_buy')) != 'nan' else '',
-                    _getf('t2_open'),
-                    _getf('t2_close'),
-                    _getf('t2_high'),
-                    _getf('t2_low'),
-                    _getf('t2_avg'),
-                    _getf('t2_volume'),
-                    round(float(_row.get('t2_pnl_pct_vs_buy', 0)), 2) if _row.get('t2_pnl_pct_vs_buy') is not None and str(_row.get('t2_pnl_pct_vs_buy')) != 'nan' else '',
-                    _getf('t3_open'),
-                    _getf('t3_close'),
-                    _getf('t3_high'),
-                    _getf('t3_low'),
-                    _getf('t3_avg'),
-                    _getf('t3_volume'),
-                    round(float(_row.get('t3_pnl_pct_vs_buy', 0)), 2) if _row.get('t3_pnl_pct_vs_buy') is not None and str(_row.get('t3_pnl_pct_vs_buy')) != 'nan' else '',
                 ]
                 if str is bytes:
                     _out_row = [x.encode('utf-8') if isinstance(x, unicode) else x for x in _out_row]
